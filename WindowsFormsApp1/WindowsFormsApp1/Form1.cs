@@ -27,6 +27,7 @@ namespace WindowsFormsApp1
         double Fxr = 0;
         double xr = 0;
         double resul = 0;
+        bool abierto = false;
 
         public Form1() 
         {
@@ -43,31 +44,40 @@ namespace WindowsFormsApp1
             else
             {
                 funcion = (textBox1.Text);
-                maycero(funcion); //mando a buscar la diferencia entre negativo y positi
-                Console.WriteLine("Xant " + Xant + ", X, " + _X + ", Yant " + Yant + ", Y " + _Y);
-                Iant = DameiCero(ref _X, ref _Y, ref Xant, ref Yant); //primer xr
-                Console.WriteLine("IANT  " + Iant);
-                Fxr = Funcion_xr(Iant); // vuelvo a buscar en una func similar a maycero
-                Console.WriteLine("Fxr = " + Fxr);
-                while (seguir)
+                if (abierto)
                 {
-                    xr = Damei(ref _X, ref _Y, ref Fxr, ref Iant);
-                    Console.WriteLine("xr " + xr);
-                    resul = Math.Round(((xr - Iant) / xr),4);
-                    if (resul < error)
-                    {
-                        Console.WriteLine("La raiz aproximada es: " + xr);
-                        seguir = false;
-                        break;
-                    }
-                    else
-                    {
-                        Fxr = Funcion_xr(xr);
-                        Iant = xr;
-                    }
+                    MessageBox.Show("metodo abierto");
+                     
                     
-                }
 
+                }
+                else { 
+                    maycero(funcion); //mando a buscar la diferencia entre negativo y positi
+                    Console.WriteLine("Xant " + Xant + ", X, " + _X + ", Yant " + Yant + ", Y " + _Y);
+                    Iant = DameiCero(ref _X, ref _Y, ref Xant, ref Yant); //primer xr
+                    Console.WriteLine("IANT  " + Iant);
+                    Fxr = Funcion_xr(Iant); // vuelvo a buscar en una func similar a maycero
+                    Console.WriteLine("Fxr = " + Fxr);
+                    seguir = true;
+                    while (seguir)
+                    {
+                        xr = Damei(ref _X, ref _Y, ref Fxr, ref Iant);
+                        Console.WriteLine("xr " + xr);
+                        resul = Math.Round(((xr - Iant) / xr),4);
+                        if (resul < error)
+                        {
+                            Console.WriteLine("La raiz aproximada es: " + xr);
+                            seguir = false;
+                            break;
+                        }
+                        else
+                        {
+                            Fxr = Funcion_xr(xr);
+                            Iant = xr;
+                        }
+                    
+                    }
+                }
             }
 
                
@@ -75,23 +85,35 @@ namespace WindowsFormsApp1
 
         public void maycero(string funcion)
         {    
-            string nueva;
+            string nueva = "";
             string algo = "";
 
-
             short signo = 1;
-            if (funcion[0] != '-')
+
+            if (funcion[0] != '+')
             {
-                nueva = funcion.Insert(0, "+");
+                if (funcion[0] == '-')
+                {
+                    nueva = funcion;
+                    signo *= -1;
+                }
+                if (funcion[0] != '+' && funcion[0] != '-')
+                {
+                    MessageBox.Show(Convert.ToString("asdas"));
+                    nueva = funcion.Insert(0, "+");
+                }
             }
             else
             {
-                nueva = funcion;
-                signo *= -1;
+                if (funcion[0] == '+')
+                {
+                    nueva = funcion;
+                }
             }
-            terminos = nueva.Split('x');
 
-            for(int X=-10; X<11; X++)
+            terminos = nueva.Split('x');
+            MessageBox.Show(Convert.ToString(nueva));
+            for (int X=-10; X<11; X++)
             {
                 double bufPot = 0;
                 double acumulador = 0;
@@ -161,18 +183,31 @@ namespace WindowsFormsApp1
             double xr = 0;
             string nueva = "";
             string algo = "";
-
-
             short signo = 1;
-            if (funcion[0] != '-')
+
+
+            if (funcion[0] != '+')
             {
-                nueva = funcion.Insert(0, "+");
+                if (funcion[0] == '-')
+                {
+                    nueva = funcion;
+                    signo *= -1;
+                }
+                if (funcion[0] != '+' && funcion[0] != '-')
+                {
+                    MessageBox.Show(Convert.ToString("asdas"));
+                    nueva = funcion.Insert(0, "+");
+                }
             }
             else
             {
-                nueva = funcion;
-                signo *= -1;
+                if (funcion[0] == '+')
+                {
+                    nueva = funcion;
+                }
             }
+
+
             terminos = nueva.Split('x');
 
                 double bufPot = 0;
@@ -250,5 +285,15 @@ namespace WindowsFormsApp1
             resultado = (_X - (dividendo / divisor));
             return Math.Round(resultado, 4);
         } //4
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (abierto)
+            {
+                abierto = false;
+            }
+            else { 
+                abierto = true;
+            }
+        }
     }
 }
