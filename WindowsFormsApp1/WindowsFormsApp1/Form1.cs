@@ -156,7 +156,6 @@ namespace WindowsFormsApp1
             }
            
         } // 1
-
         public double Funcion_xr(double iant)
         {
             double xr = 0;
@@ -230,7 +229,6 @@ namespace WindowsFormsApp1
 
             return Math.Round(xr, 4);
         } // 3
-
         public double DameiCero(ref double _X, ref double _Y, ref double Xant, ref double Yant) // 2
         {
             double divisor = 0;
@@ -251,6 +249,6 @@ namespace WindowsFormsApp1
             divisor = (Fxr - _Y);
             resultado = (_X - (dividendo / divisor));
             return Math.Round(resultado, 4);
-        }
+        } //4
     }
 }
