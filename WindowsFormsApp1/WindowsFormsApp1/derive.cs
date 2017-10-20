@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WindowsFormsApp1
+namespace derivador
 {
     public class derive
     {
@@ -14,7 +14,6 @@ namespace WindowsFormsApp1
         public int contador = 0;
         public int TotalMono = 0;
         public char[] grado = { 'x', '^' };
-        private object formGraphics;
         public string submono;
         public string[] parte;
         public int TotalParte;

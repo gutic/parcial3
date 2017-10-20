@@ -1,4 +1,4 @@
-﻿
+﻿using derivador; //incluyo el namespace derivador del archivo derive.cs
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
