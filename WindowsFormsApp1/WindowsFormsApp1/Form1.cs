@@ -82,6 +82,18 @@ namespace WindowsFormsApp1
 
                
         }
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (abierto)
+            {
+                abierto = false;
+            }
+            else
+            {
+                abierto = true;
+            }
+        }
+
 
         public void maycero(string funcion)
         {    
@@ -285,15 +297,9 @@ namespace WindowsFormsApp1
             resultado = (_X - (dividendo / divisor));
             return Math.Round(resultado, 4);
         } //4
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        public string derivar(string fun)
         {
-            if (abierto)
-            {
-                abierto = false;
-            }
-            else { 
-                abierto = true;
-            }
+            return fun; 
         }
     }
 }
