@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -28,6 +29,11 @@ namespace WindowsFormsApp1
         double xr = 0;
         double resul = 0;
         bool abierto = false;
+        int grado = 1;
+        string Fprima = "";
+        string Fsegunda = "";
+        double condicion = 0;
+        string buferString = "";
 
         public Form1() 
         {
@@ -47,9 +53,47 @@ namespace WindowsFormsApp1
                 if (abierto)
                 {
                     MessageBox.Show("metodo abierto");
-                     
-                    
+                    derive derivando = new derive();
+                    maycero(funcion);
+                    Console.WriteLine("Y = " + _Y + ". Y anterior = " + Yant + ", grado "+ grado);
+                    Console.WriteLine(" Y * YANT = " + _Y * Yant);
+                    if (_Y * Yant < 0) // I condicion
+                    {
+                        Fprima = derivando.derivar(funcion);
+                        Fsegunda = derivando.derivar(Fprima);
+                        Console.WriteLine(Fsegunda);
+                        if (grado == 1)
+                        {
+                            Console.WriteLine("No cumple II condicion");
+                            
+                        }
+                        if (grado == 2 )
+                        {
+                            terminos = Fsegunda.Split('+', '-');
+                            buferString = Convert.ToString(terminos[1]);
+                            condicion = Convert.ToDouble(buferString);
+                            Console.WriteLine("condicion= " + condicion);
+                            if(condicion > 0)
+                            {
+                                Console.WriteLine("cumple II condicion");
+                                //hacer la formula
+                            }
+                            else
+                            {
+                                Console.WriteLine("no cumple II condicion");    
+                            }
+                            
+                        }
+                        if (grado > 3)
+                        {
+                            Console.WriteLine("cumple II condicion");
+                            //verificar condicion y hacer la formula
+                        }
 
+                    }else
+                    {
+                        Console.WriteLine("no cumple I condicion");
+                    }
                 }
                 else { 
                     maycero(funcion); //mando a buscar la diferencia entre negativo y positi
@@ -99,7 +143,7 @@ namespace WindowsFormsApp1
         {    
             string nueva = "";
             string algo = "";
-
+            grado = 1;
             short signo = 1;
 
             if (funcion[0] != '+')
@@ -133,10 +177,19 @@ namespace WindowsFormsApp1
                 double bufNum = 0;
                 double numero = 0;
                 
+
                 foreach (string termino in terminos)
                 {    
                     if (primero == 1)
                     {
+                        if (grado == 1)
+                        {
+                            if (termino[0] == '^')
+                            {
+                                algo = Convert.ToString(termino[1]);
+                                grado = Convert.ToInt16(algo);
+                            }
+                        }
                         for (int i = 0; i < termino.Length; i++)
                         {
                             if (termino[i] == '^' && i == 0 && termino.Length == 4)
@@ -268,7 +321,7 @@ namespace WindowsFormsApp1
                     }
                     if (termino.Substring(1, 1) != "^" && termino.Substring(1, 1) != "+" && termino.Substring(1, 1) != "-" && primero == 0)
                     {
-                        numero = Convert.ToDouble(termino.Substring(1, 1));
+                        numero = Convert.ToDouble(termino.Substring(1, 1));                   
                         primero = 1;
                     }
                 }
@@ -302,4 +355,5 @@ namespace WindowsFormsApp1
             return fun; 
         }
     }
+
 }
