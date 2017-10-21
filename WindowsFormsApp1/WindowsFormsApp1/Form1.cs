@@ -34,6 +34,9 @@ namespace WindowsFormsApp1
         string Fsegunda = "";
         double condicion = 0;
         string buferString = "";
+        public string[] FunAbierta;
+        int sign = 1;
+
 
         public Form1() 
         {
@@ -69,9 +72,14 @@ namespace WindowsFormsApp1
                         }
                         if (grado == 2 )
                         {
+                            if (Fsegunda[0] == '-')
+                            {
+                                sign = -1;
+                            }
                             terminos = Fsegunda.Split('+', '-');
                             buferString = Convert.ToString(terminos[1]);
                             condicion = Convert.ToDouble(buferString);
+                            condicion = condicion * sign;
                             Console.WriteLine("condicion= " + condicion);
                             if(condicion > 0)
                             {
@@ -84,10 +92,37 @@ namespace WindowsFormsApp1
                             }
                             
                         }
-                        if (grado > 3)
+                        if (grado >= 3)
                         {
-                            Console.WriteLine("cumple II condicion");
+                            int j = 0;
+                            if (funcion[0] == '+')
+                            {
+                                sign = -1;
+                            }
                             //verificar condicion y hacer la formula
+                            for (int i = 1; i < funcion.Length; i++)
+                            {
+                                if (funcion[i] != 'x' && j == 0)
+                                {
+                                    FunAbierta[0] += funcion[i];
+                                }
+                                if (funcion[i] == 'x')
+                                {
+                                    j = 1;
+                                    if(funcion[i+1] == '-')
+                                    {
+
+                                    }
+                                }
+                                if (funcion[i] != 'x' && j == 1)
+                                {
+                                    FunAbierta[3] += funcion[i];
+                                }
+
+
+
+                                //+18x-4
+                            }
                         }
 
                     }else
