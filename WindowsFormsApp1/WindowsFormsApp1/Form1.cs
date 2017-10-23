@@ -17,25 +17,35 @@ namespace WindowsFormsApp1
         public string result;
         public string funcion;
         public string[] terminos;
-        double _Y = 0;
-        double _X = 0;
-        double Yan = 0;
-        double Yant = 0;
-        double Xant = 0;
-        double error = 0.01;
-        bool seguir = true;
-        double Iant = 0;
-        double Fxr = 0;
-        double xr = 0;
-        double resul = 0;
-        bool abierto = false;
-        int grado = 1;
-        string Fprima = "";
-        string Fsegunda = "";
-        double condicion = 0;
-        string buferString = "";
-        public string[] FunAbierta;
-        int sign = 1;
+        public double _Y = 0;
+        public double _X = 0;
+        public double Yan = 0;
+        public double Yant = 0;
+        public double Xant = 0;
+        public double error = 0.01;
+        public bool seguir = true;
+        public double Iant = 0;
+        public double Fxr = 0;
+        public double xr = 0;
+        public double resul = 0;
+        public bool abierto = false;
+        public int grado = 1;
+        public string Fprima = "";
+        public string Fsegunda = "";
+        public double condicion = 0;
+        public double condicion2 = 0;
+        public string buferString = "";
+        public string FunAbierta = "";
+        public int sign = 1;
+        public int sign2 = 1;
+        public double termino1 = 0;
+        public double termino2 = 0;
+        //_______________________
+        public double FprimaX = 0;
+        public double FprimaDivY = 0;
+        public double nuevoX = 0;
+        public string FuncBackup = "";
+
 
 
         public Form1() 
@@ -46,6 +56,7 @@ namespace WindowsFormsApp1
 
         private void button1_Click(object sender, EventArgs e)
         {
+            int j = 0;
             if (string.IsNullOrEmpty(textBox1.Text) || string.Format(textBox1.Text) == "Ingrese f(x) aquí")
             {
                 MessageBox.Show("Ingrese una funcion! \n");
@@ -53,22 +64,22 @@ namespace WindowsFormsApp1
             else
             {
                 funcion = (textBox1.Text);
+                FuncBackup = funcion;
                 if (abierto)
                 {
                     MessageBox.Show("metodo abierto");
-                    derive derivando = new derive();
+                    derive derivando = new derive();//creo objeto que tiene funciones para derivar
                     maycero(funcion);
-                    Console.WriteLine("Y = " + _Y + ". Y anterior = " + Yant + ", grado "+ grado);
+                    Console.WriteLine("_X =" + _X + ", Xant= " + Xant +  ", Y = " + _Y + ". Y anterior = " + Yant + ", grado "+ grado);
                     Console.WriteLine(" Y * YANT = " + _Y * Yant);
                     if (_Y * Yant < 0) // I condicion
                     {
-                        Fprima = derivando.derivar(funcion);
-                        Fsegunda = derivando.derivar(Fprima);
+                        Fprima = derivando.derivar(funcion); //primer derivada
+                        Fsegunda = derivando.derivar(Fprima); //segunda derivada
                         Console.WriteLine(Fsegunda);
                         if (grado == 1)
                         {
-                            Console.WriteLine("No cumple II condicion");
-                            
+                            Console.WriteLine("No cumple II condicion");            
                         }
                         if (grado == 2 )
                         {
@@ -84,47 +95,104 @@ namespace WindowsFormsApp1
                             if(condicion > 0)
                             {
                                 Console.WriteLine("cumple II condicion");
-                                //hacer la formula
+                                //Desarrollar formula_____________
+                                
+                                FprimaX = fprimera(ref Fprima,ref FunAbierta,ref termino1,ref j,ref termino2,ref _X);
+                                Console.WriteLine("F'(xi) = " + FprimaX);
+                                FprimaDivY = _Y / FprimaX;
+                                Console.WriteLine("F(xi)/F'(xi) = " + FprimaDivY);
+                                Xant = _X - (FprimaDivY);
+                                Xant = Math.Round(Xant, 4);
+                                while (seguir)
+                                {
+                                    Fxr = Funcion_xr(Xant); //saco F(X)
+                                    Console.WriteLine("Xant" + Fxr);
+                                    FprimaX = fprimera(ref Fprima, ref FunAbierta, ref termino1, ref j, ref termino2, ref Xant); //saco F'(x)
+                                    Console.WriteLine("FprimaX" + FprimaX);
+                                    FprimaDivY = Fxr / FprimaX; //div entre f(x) y f'(x)
+                                    nuevoX = Xant - FprimaDivY;
+                                    if(((nuevoX - Xant) / nuevoX) < error)
+                                    {
+                                        Console.WriteLine("la raiz aprox es: " + Math.Round(nuevoX,4));
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        Xant = nuevoX;
+                                    }
+                                }
+                                //_______________________________
                             }
                             else
                             {
                                 Console.WriteLine("no cumple II condicion");    
-                            }
-                            
+                            }  
                         }
                         if (grado >= 3)
                         {
-                            int j = 0;
-                            if (funcion[0] == '+')
+                            if (Fsegunda[0] == '-')
                             {
                                 sign = -1;
                             }
-                            //verificar condicion y hacer la formula
-                            for (int i = 1; i < funcion.Length; i++)
+                            for (int i = 1; i < Fsegunda.Length; i++)
                             {
-                                if (funcion[i] != 'x' && j == 0)
+                                if (Fsegunda[i] != 'x' && j == 0)
                                 {
-                                    FunAbierta[0] += funcion[i];
+                                    FunAbierta += Fsegunda[i];
+                                   
                                 }
-                                if (funcion[i] == 'x')
+                                if (Fsegunda[i] == 'x')
                                 {
                                     j = 1;
-                                    if(funcion[i+1] == '-')
+                                    if (Fsegunda[i + 1] == '-')
                                     {
+                                        sign2 = -1;
+                                    }
+                                    termino1 = Convert.ToDouble(FunAbierta);
+                                    termino1 = termino1 * sign;
+                                    FunAbierta = "";
+                                }
+                                if (Fsegunda[i] != 'x' && j == 1 && Fsegunda[i] != '+' && Fsegunda[i] != '-')
+                                {
+                                    FunAbierta += Fsegunda[i];
+                                }
+                            }
+                            termino2 = Convert.ToDouble(FunAbierta);
+                            termino2 = termino2 * sign2;
+                            condicion = Xant * termino1 + termino2; //x= X e Xant
+                            condicion2 = _X * termino1 + termino2;
+                            if (condicion > 0 || condicion2 > 0)
+                            {
 
+                                Console.WriteLine("cumple II condicion");
+                                //desarrollar pg;
+
+                                Fxr = Funcion_xr(_X);
+                                funcion = Fprima; //cambio la funcion derivada primera a funcion.
+                                FprimaX = Funcion_xr(_X);
+                                FprimaDivY = Fxr / FprimaX;
+                                Xant = _X - FprimaDivY;
+
+                                while (seguir)
+                                {
+                                    funcion = FuncBackup; //vuelvo a la func original
+                                    Fxr = Funcion_xr(Xant);
+                                    funcion = Fprima; //cambio a la 1er derivada de la F
+                                    FprimaX = Funcion_xr(Xant);
+                                    FprimaDivY = Fxr / FprimaX;
+                                    nuevoX = Xant - FprimaDivY;
+                                    if (((nuevoX - Xant) / nuevoX) < error)
+                                    {
+                                        Console.WriteLine("la razi aprox es: " + nuevoX);
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        Xant = nuevoX;
                                     }
                                 }
-                                if (funcion[i] != 'x' && j == 1)
-                                {
-                                    FunAbierta[3] += funcion[i];
-                                }
-
-
-
-                                //+18x-4
                             }
                         }
-
                     }else
                     {
                         Console.WriteLine("no cumple I condicion");
@@ -157,9 +225,8 @@ namespace WindowsFormsApp1
                     
                     }
                 }
-            }
-
-               
+                restablecer();
+            }     
         }
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
@@ -172,8 +239,6 @@ namespace WindowsFormsApp1
                 abierto = true;
             }
         }
-
-
         public void maycero(string funcion)
         {    
             string nueva = "";
@@ -190,7 +255,6 @@ namespace WindowsFormsApp1
                 }
                 if (funcion[0] != '+' && funcion[0] != '-')
                 {
-                    MessageBox.Show(Convert.ToString("asdas"));
                     nueva = funcion.Insert(0, "+");
                 }
             }
@@ -203,7 +267,6 @@ namespace WindowsFormsApp1
             }
 
             terminos = nueva.Split('x');
-            MessageBox.Show(Convert.ToString(nueva));
             for (int X=-10; X<11; X++)
             {
                 double bufPot = 0;
@@ -248,16 +311,11 @@ namespace WindowsFormsApp1
                                 {
                                     bufNum *= -1;
                                 }
-                                Console.WriteLine(" total hasta ahora: " + acumulador);
-                                Console.WriteLine("numero independiente: " + bufNum);
                                 acumulador += bufNum;
                                 numero = X * numero;
-                                Console.WriteLine("ultimo x " + numero);
                                 acumulador += numero;
                             }
                         }
-
-                        Console.WriteLine("termino");
                     }
                     if (termino.Substring(1, 1) != "^" && termino.Substring(1, 1) != "+" && termino.Substring(1, 1) != "-" && primero == 0)
                     {
@@ -266,13 +324,12 @@ namespace WindowsFormsApp1
                     }
                 }
                 Console.WriteLine("X  = |"+ X +"| Y =" + acumulador * signo);
-                if ((((acumulador * signo) * 1) > 0 && Yan < 0))
+                if ((((acumulador * signo) * 1) > 0 && Yan < 0)) //salidas
                 {
                     Xant = X - 1;
                     _X = X;
                     _Y = acumulador * signo;
                     Yant = Yan;
-                    
                 }
                 Yan = acumulador * signo;
             }
@@ -295,7 +352,6 @@ namespace WindowsFormsApp1
                 }
                 if (funcion[0] != '+' && funcion[0] != '-')
                 {
-                    MessageBox.Show(Convert.ToString("asdas"));
                     nueva = funcion.Insert(0, "+");
                 }
             }
@@ -343,11 +399,8 @@ namespace WindowsFormsApp1
                                 {
                                     bufNum *= -1;
                                 }
-                                Console.WriteLine(" total hasta ahora: " + acumulador);
-                                Console.WriteLine("numero independiente: " + bufNum);
                                 acumulador += bufNum;
                                 numero = iant * numero;
-                                Console.WriteLine("ultimo x " + numero);
                                 acumulador += numero;
                             }
                         }
@@ -385,9 +438,68 @@ namespace WindowsFormsApp1
             resultado = (_X - (dividendo / divisor));
             return Math.Round(resultado, 4);
         } //4
-        public string derivar(string fun)
+        //__________abierto_________________
+        public double fprimera(ref string Fprima, ref string FunAbierta, ref double termino1, ref int j, ref double termino2, ref double _X)
         {
-            return fun; 
+            for (int i = 1; i < Fprima.Length; i++)
+            {
+                if (Fprima[i] != 'x' && j == 0)
+                {
+                    FunAbierta += Fprima[i];
+
+                }
+                if (Fprima[i] == 'x')
+                {
+                    j = 1;
+                    if (Fprima[i + 1] == '-')
+                    {
+                        sign2 = -1;
+                    }
+                    termino1 = Convert.ToDouble(FunAbierta);
+                    termino1 = termino1 * sign;
+                    FunAbierta = "";
+                }
+                if (Fprima[i] != 'x' && j == 1 && Fprima[i] != '+' && Fprima[i] != '-')
+                {
+                    FunAbierta += Fprima[i];
+                }
+            }
+            termino2 = Convert.ToDouble(FunAbierta);
+            termino2 = termino2 * sign2;
+            return  (termino1 * _X + termino2);
+        }
+        void restablecer()
+        {
+            result = "";
+            funcion = "";
+            _Y = 0;
+            _X = 0;
+            Yan = 0;
+            Yant = 0;
+            Xant = 0;
+            error = 0.01;
+            seguir = true;
+            Iant = 0;
+            Fxr = 0;
+            xr = 0;
+            resul = 0;
+            abierto = false;
+            grado = 1;
+            Fprima = "";
+            Fsegunda = "";
+            condicion = 0;
+            condicion2 = 0;
+            buferString = "";
+            FunAbierta = "";
+            sign = 1;
+            sign2 = 1;
+            termino1 = 0;
+            termino2 = 0;
+            //_______________________
+            FprimaX = 0;
+            FprimaDivY = 0;
+            nuevoX = 0;
+            FuncBackup = "";
         }
     }
 
